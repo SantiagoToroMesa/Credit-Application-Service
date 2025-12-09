@@ -2,6 +2,8 @@ package com.springboot.credit_application_service.application.port.in.Applicatio
 
 import com.springboot.credit_application_service.domain.model.CreditApplication;
 
-public interface EvaluateCreditApplicationUseCase {
-    CreditApplication evaluate(String applicationId);
+import java.util.List;
+
+public interface GetCreditApplicationsPort {
+    List<CreditApplication> findByAffiliate(String documentNumber);
 }

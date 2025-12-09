@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # 1. SERVICIO PRINCIPAL: credit-application-service
+  credit-application-service:
+    # Asume que el Dockerfile del servicio principal está en la raíz (context: .)
+    build:
+      context: .
+      target: run
+
+    container_name: credit-app-service
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      # Conexión a DB
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/creditdb?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: qwe123
+      SPRING_FLYWAY_ENABLED: "true"
+
+      # Conexión al servicio de riesgo (usa el puerto 8081 que expone el mock)
+      RISK_CENTRAL_URL: http://risk-central:8081
+
+    depends_on:
+      - db
+      - risk-central
+
+  # 2. MOCK DE SERVICIO EXTERNO: risk-central-mock-service
+  risk-central:
+    # AJUSTE CLAVE: Construye la imagen usando el Dockerfile en la carpeta del mock
+    # Asumimos que el Dockerfile del mock está en una subcarpeta llamada 'risk-central-mock-service'
+    build:
+      context: ../risk-central-mock-service
+      # Si el Dockerfile se llama diferente (ej: Dockerfile.mock), ajusta:
+      # dockerfile: Dockerfile
+      target: run # Usa la etapa final de tu Dockerfile del mock
+
+    container_name: risk-central-mock
+
+    # El puerto 8081 es el que usa internamente la aplicación de crédito
+    ports:
+      - "8081:8081"
+
+    # Nota: Tu Dockerfile del mock ya tiene EXPOSE 8081 y ENTRYPOINT
+
+
+  # 3. BASE DE DATOS PERSISTENTE: db
+  db:
+    image: mysql:8.0.44
+    container_name: credit-db
+
+    environment:
+      MYSQL_ROOT_PASSWORD: qwe123
+      MYSQL_DATABASE: creditdb
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - db_data:/var/lib/mysql
+
+# Definición del volumen persistente
+volumes:
+  db_data:

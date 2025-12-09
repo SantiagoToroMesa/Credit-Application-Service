@@ -2,7 +2,11 @@ package com.springboot.credit_application_service.infrastructure.persistence.ent
 
 import com.springboot.credit_application_service.domain.valueObjects.RiskLevel;
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Entity
+@Table(name = "risk_evaluations")
+@Data
 public class RiskEvaluationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

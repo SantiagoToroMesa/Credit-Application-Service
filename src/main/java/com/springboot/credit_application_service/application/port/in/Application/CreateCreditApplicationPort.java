@@ -3,6 +3,6 @@ package com.springboot.credit_application_service.application.port.in.Applicatio
 import com.springboot.credit_application_service.application.service.command.CreateCreditApplicationCommand;
 import com.springboot.credit_application_service.domain.model.CreditApplication;
 
-public interface CreateCreditApplicationUseCase {
+public interface CreateCreditApplicationPort {
     CreditApplication create(CreateCreditApplicationCommand command);
 }

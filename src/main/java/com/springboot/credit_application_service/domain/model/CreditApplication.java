@@ -16,4 +16,48 @@ public record CreditApplication(
         RiskEvaluation evaluation
 ) {
 
+    public static CreditApplication create(
+            Affiliate affiliate,
+            BigDecimal amount,
+            int termMonths,
+            BigDecimal interestRate,
+            RiskEvaluation evaluation
+    ) {
+        return new CreditApplication(
+                null,
+                affiliate,
+                amount,
+                termMonths,
+                interestRate,
+                LocalDate.now(),
+                ApplicationStatus.PENDING,
+                evaluation
+        );
+    }
+
+    public CreditApplication withEvaluation(RiskEvaluation updated) {
+        return new CreditApplication(
+                this.id,
+                this.affiliate,
+                this.amount,
+                this.termMonths,
+                this.interestRate,
+                this.applicationDate,
+                this.status,
+                updated
+        );
+    }
+
+    public CreditApplication withStatus(ApplicationStatus newStatus) {
+        return new CreditApplication(
+                this.id,
+                this.affiliate,
+                this.amount,
+                this.termMonths,
+                this.interestRate,
+                this.applicationDate,
+                newStatus,
+                this.evaluation
+        );
+    }
 }
